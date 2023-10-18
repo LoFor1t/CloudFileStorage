@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.FileAlreadyExistsException;
+
 @RestController
 @RequiredArgsConstructor
 public class UploadFileController {
@@ -24,7 +26,11 @@ public class UploadFileController {
         Long userId = userService.getUserIdBySecurityContext();
 
 
-        minioService.uploadObject(userId, file);
+        try {
+            minioService.uploadObject(userId, file);
+        } catch (FileAlreadyExistsException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
         return ResponseEntity.ok("File uploaded successfully");
     }
 }
