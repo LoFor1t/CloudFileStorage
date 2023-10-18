@@ -5,6 +5,8 @@ import com.LoFor1t.CloudFileStorage.entity.User;
 import com.LoFor1t.CloudFileStorage.repository.RoleRepository;
 import com.LoFor1t.CloudFileStorage.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +44,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAllUsers() {
         return userRepository.findAll();
+    }
 
+    public Long getUserIdBySecurityContext() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return userRepository.getUserIdByUsername(authentication.getName());
     }
 
     private Role checkRoleExist() {
