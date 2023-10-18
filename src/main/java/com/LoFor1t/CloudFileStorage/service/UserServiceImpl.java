@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void saveUser(User user) {
@@ -44,13 +44,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
 
     }
-
-//    private UserDto mapToUserDto(User user) {
-//        return UserDto
-//                .builder()
-//                .username(user.getUsername())
-//                .build();
-//    }
 
     private Role checkRoleExist() {
         Role role = Role.builder().name("ROLE_USER").build();
