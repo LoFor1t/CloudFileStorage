@@ -1,4 +1,4 @@
-package com.LoFor1t.CloudFileStorage.security;
+package com.LoFor1t.CloudFileStorage.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +15,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SpringSecurity {
+public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
 
@@ -31,6 +31,7 @@ public class SpringSecurity {
                         authorize
                                 .requestMatchers("/register").permitAll()
                                 .requestMatchers("/register/**").permitAll()
+                                .requestMatchers("/login").permitAll()
                                 .anyRequest().authenticated()
                 ).formLogin(
                         form -> form
