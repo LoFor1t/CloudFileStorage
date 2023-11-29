@@ -32,7 +32,8 @@ public class RegisterController {
         User existingUser = userService.findByUsername(user.getUsername());
 
         if (existingUser != null && existingUser.getUsername() != null && !existingUser.getUsername().isEmpty()) {
-            bindingResult.rejectValue("username", null, "There is already an account registered with that username");
+            bindingResult.rejectValue("username", null, "User with such username already\n" +
+                    "                                        exists");
         }
 
         if (bindingResult.hasErrors()) {
@@ -42,6 +43,6 @@ public class RegisterController {
 
         userService.saveUser(user);
 
-        return "redirect:/register?success";
+        return "redirect:/login";
     }
 }

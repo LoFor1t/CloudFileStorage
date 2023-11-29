@@ -32,6 +32,7 @@ public class SecurityConfig {
                                 .requestMatchers("/register").permitAll()
                                 .requestMatchers("/register/**").permitAll()
                                 .requestMatchers("/login").permitAll()
+                                .requestMatchers("/styles/**").permitAll()
                                 .anyRequest().authenticated()
                 ).formLogin(
                         form -> form
@@ -42,7 +43,7 @@ public class SecurityConfig {
                 ).logout(
                         logout -> logout
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                                .logoutSuccessUrl("/index")
+                                .logoutSuccessUrl("/login")
                 );
 
         return http.build();
