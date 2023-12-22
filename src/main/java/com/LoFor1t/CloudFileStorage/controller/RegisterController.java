@@ -33,7 +33,7 @@ public class RegisterController {
 
         if (existingUser != null && existingUser.getUsername() != null && !existingUser.getUsername().isEmpty()) {
             bindingResult.rejectValue("username", null, "User with such username already\n" +
-                    "                                        exists");
+                    "exists");
         }
 
         if (bindingResult.hasErrors()) {
