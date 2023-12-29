@@ -116,4 +116,30 @@ public class StorageService {
             e.printStackTrace();
         }
     }
+
+    public void changeObjectName(Long userId, String fileName, String newFileName) {
+        if (!checkFileExisting(userId, fileName)) {
+            return;
+        }
+        try {
+            minioClient.copyObject(
+                    CopyObjectArgs.builder()
+                            .bucket(getBucketName(userId))
+                            .object(newFileName)
+                            .source(
+                                    CopySource.builder()
+                                            .bucket(getBucketName(userId))
+                                            .object(fileName)
+                                            .build()
+                            )
+                            .build()
+            );
+            minioClient.removeObject(RemoveObjectArgs.builder()
+                    .bucket(getBucketName(userId))
+                    .object(fileName)
+                    .build());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

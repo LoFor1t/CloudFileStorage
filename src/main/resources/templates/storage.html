@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/styles/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/styles/css/bootstrap.css">
     <title>File Storage Card</title>
 </head>
 <body>
@@ -70,10 +71,11 @@
                         </div>
                     </div>
                     <div class="input-group">
-                        <form>
+                        <form th:action="@{/files/changeName}">
                             <div class="row">
                                 <label>
-                                    <input class="col-9 py-0" type="text" value="File">
+                                    <input name="newFileName" class="col-9 py-0" type="text" th:value="${fileName}">
+                                    <input name="oldFileName" th:value="${fileName}" style="display: none">
                                 </label>
                                 <button type="submit" class="btn col-7 my-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="30%" fill="currentColor"

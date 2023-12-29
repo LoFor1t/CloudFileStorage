@@ -39,11 +39,18 @@ public class FileController {
 
     @GetMapping("/delete")
     public String deleteFile(@RequestParam("fileName") String fileName) {
-        System.out.println("Check deleteFile method");
-
         Long userId = userService.getUserIdBySecurityContext();
 
         storageService.deleteObject(userId, fileName);
+
+        return "redirect:/storage";
+    }
+
+    @GetMapping("/changeName")
+    public String changeFileName(@RequestParam("oldFileName") String fileName, @RequestParam("newFileName") String newFileName) {
+        Long userId = userService.getUserIdBySecurityContext();
+
+        storageService.changeObjectName(userId, fileName, newFileName);
 
         return "redirect:/storage";
     }
