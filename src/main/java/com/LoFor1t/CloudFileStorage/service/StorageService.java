@@ -1,12 +1,15 @@
 package com.LoFor1t.CloudFileStorage.service;
 
 import io.minio.*;
-import io.minio.errors.ErrorResponseException;
+import io.minio.errors.*;
+import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.FileAlreadyExistsException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +42,26 @@ public class StorageService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public List<String> listNamesOfUserFiles(Long userId) {
+        Iterable<Result<Item>> userObjects = minioClient.listObjects(ListObjectsArgs.builder()
+                .bucket(getBucketName(userId))
+                .build());
+
+        return getObjectNames(userObjects);
+    }
+
+    private List<String> getObjectNames(Iterable<Result<Item>> userObjects) {
+        List<String> objectNames = new ArrayList<>();
+        for (Result<Item> result : userObjects) {
+            try {
+                objectNames.add(result.get().objectName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return objectNames;
     }
 
     public void uploadObject(Long userId, MultipartFile file) throws FileAlreadyExistsException {
