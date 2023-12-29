@@ -102,4 +102,18 @@ public class StorageService {
             return false;
         }
     }
+
+    public void deleteObject(Long userId, String fileName) {
+        if (!checkFileExisting(userId, fileName)) {
+            return;
+        }
+        try {
+            minioClient.removeObject(RemoveObjectArgs.builder()
+                    .bucket(getBucketName(userId))
+                    .object(fileName)
+                    .build());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
