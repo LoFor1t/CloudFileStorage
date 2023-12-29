@@ -1,36 +1,38 @@
 package com.LoFor1t.CloudFileStorage.controller;
 
-import com.LoFor1t.CloudFileStorage.service.MinioService;
+import com.LoFor1t.CloudFileStorage.service.StorageService;
 import com.LoFor1t.CloudFileStorage.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.nio.file.FileAlreadyExistsException;
 
-@RestController
+
+@Controller
 @RequiredArgsConstructor
 public class UploadFileController {
 
-    private final MinioService minioService;
+    private final StorageService storageService;
     private final UserServiceImpl userService;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
         Long userId = userService.getUserIdBySecurityContext();
 
+        String fileUploadError = "";
 
         try {
-            minioService.uploadObject(userId, file);
+            storageService.uploadObject(userId, file);
         } catch (FileAlreadyExistsException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            fileUploadError = e.getMessage();
         }
-        return ResponseEntity.ok("File uploaded successfully");
+
+        redirectAttributes.addFlashAttribute("fileUploadError", fileUploadError);
+
+        return "redirect:/storage";
     }
 }

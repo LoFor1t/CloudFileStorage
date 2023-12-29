@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,9 +17,9 @@
 <div class="container mt-5">
     <div class="row mb-3">
         <div class="col-4 bg-dark text-white rounded-4 p-3">
-            <form>
-                <input type="file" class="mb-3">
-
+            <form method="post" action="/upload" enctype="multipart/form-data">
+                <input name="file" type="file" class="mb-3">
+                <p class="text-danger" th:text="${fileUploadError}">File don't uploaded</p>
                 <input type="submit" value="Load files">
             </form>
         </div>
