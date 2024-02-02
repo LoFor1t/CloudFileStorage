@@ -22,12 +22,8 @@ public class FileController {
     @GetMapping
     public ResponseEntity<List<String>> getUserFileNames() {
         Long userId = userService.getUserIdBySecurityContext();
-
-//        Long userId = 102L;
-
         return new ResponseEntity<>(storageService.listNamesOfUserFiles(userId), HttpStatus.OK);
     }
-
 
     @PostMapping("/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
@@ -55,8 +51,9 @@ public class FileController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping("/changeName")
-    public String changeFileName(@RequestParam("oldFileName") String fileName, @RequestParam("newFileName") String newFileName) {
+    @GetMapping("/rename")
+    public String changeFileName(@RequestParam("oldFileName") String fileName,
+                                 @RequestParam("newFileName") String newFileName) {
         Long userId = userService.getUserIdBySecurityContext();
 
         storageService.changeObjectName(userId, fileName, newFileName);

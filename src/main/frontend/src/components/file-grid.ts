@@ -17,7 +17,6 @@ export class FileGrid {
       for (const fileName of fileNames) {
         const fileCard = new FileCard(this.fileCardTemplate, fileName);
         this.fileCards.push(fileCard);
-        console.log(fileName);
       }
       this.render();
     });
@@ -27,7 +26,6 @@ export class FileGrid {
     return fetch("/api/files")
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
         return res as string[];
       });
   }
