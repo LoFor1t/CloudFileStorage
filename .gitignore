@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+src/main/frontend/node_modules/
+src/main/resources/static/js/
+data/
+src/main/resources/application.properties

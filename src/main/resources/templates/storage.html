@@ -1,150 +1,196 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles/css/bootstrap.css">
-    <link rel="stylesheet" href="/static/styles/css/bootstrap.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles/css/bootstrap.css" />
+    <!-- <link rel="stylesheet" href="/static/styles/css/bootstrap.css" /> -->
     <title>File Storage Card</title>
-</head>
-<body>
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
+    <!-- <script src="../static/js/app.js" type="module"></script> -->
+    <script src="js/app.js" type="module"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
         <a class="navbar-brand" href="#">Cloud File Storage</a>
-    </div>
-</nav>
+      </div>
+    </nav>
 
-<div class="container mt-5">
-    <div class="row mb-3">
+    <div class="container mt-5">
+      <div class="row mb-3">
         <div class="col-4 bg-dark text-white rounded-4 p-3">
-            <form method="post" action="/files/upload" enctype="multipart/form-data">
-                <input name="file" type="file" class="mb-3">
-                <p class="text-danger" th:text="${fileUploadError}">File don't uploaded</p>
-                <input type="submit" value="Load files">
-            </form>
+          <form
+            method="post"
+            action="/api/files/upload"
+            enctype="multipart/form-data"
+          >
+            <input name="file" type="file" class="mb-3" />
+            <p class="text-danger" th:text="${fileUploadError}">
+              File don't uploaded
+            </p>
+            <input type="submit" value="Load files" />
+          </form>
         </div>
 
         <div class="col-4"></div>
 
         <div class="col-4 bg-dark text-white rounded-4 p-3">
-            <form>
-                <input type="file" class="mb-3" value="Chose folder">
+          <form>
+            <input type="file" class="mb-3" value="Chose folder" />
 
-                <input type="submit" value="Load folders">
-            </form>
+            <input type="submit" value="Load folders" />
+          </form>
         </div>
-    </div>
+      </div>
 
-    <!--Navigation between folders-->
-    <nav aria-label="breadcrumb">
+      <!--Navigation between folders-->
+      <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item"><a href="#">Library</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Data</li>
+          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <li class="breadcrumb-item"><a href="#">Library</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Data</li>
         </ol>
-    </nav>
+      </nav>
 
-    <div class="row">
-        <!-- File Card -->
-        <div th:each="fileName : ${fileNames}" class="col-sm-2 mb-4">
-            <div class="card">
-                <div class="d-flex justify-content-center align-items-center my-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30%" fill="currentColor"
-                         class="bi bi-file-earmark" viewBox="0 0 16 16">
-                        <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
-                    </svg>
-                </div>
+      <!--User file grid-->
+      <div id="file-grid" class="row"></div>
 
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="row">
-                            <h5 class="card-title col-9" th:text="${fileName}">File</h5>
-                            <button class="btn float-end col-3 pt-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="100%" fill="currentColor"
-                                     class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                    <path fill-rule="evenodd"
-                                          d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <form th:action="@{/files/changeName}">
-                            <div class="row">
-                                <label>
-                                    <input name="newFileName" class="col-9 py-0" type="text" th:value="${fileName}">
-                                    <input name="oldFileName" th:value="${fileName}" style="display: none">
-                                </label>
-                                <button type="submit" class="btn col-7 my-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30%" fill="currentColor"
-                                         class="bi bi-check-square" viewBox="0 0 16 16">
-                                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
-                                        <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.235.235 0 0 1 .02-.022z"/>
-                                    </svg>
-                                    Submit
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                    <a href="#" class="btn btn-success my-3 w-100">Download
-                        File</a>
-                    <a th:href="@{/files/delete(fileName=${fileName})}" class="btn btn-danger w-100">Delete File</a>
-                </div>
+      <!-- File Card -->
+      <template id="file-card">
+        <div class="col-sm-2 mb-4">
+          <div class="card">
+            <div class="d-flex justify-content-center align-items-center my-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="30%"
+                fill="currentColor"
+                class="bi bi-file-earmark"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"
+                />
+              </svg>
             </div>
-        </div>
-        <!--        </div>-->
 
-        <!--        &lt;!&ndash; Folder Card &ndash;&gt;-->
-        <!--        <div class="col-sm-2 mb-4">-->
-        <!--            <div class="card">-->
-        <!--                <a class="text-black" href="#">-->
-        <!--                    <div class="d-flex justify-content-center align-items-center my-3">-->
-        <!--                        <svg xmlns="http://www.w3.org/2000/svg" width="30%" fill="currentColor"-->
-        <!--                             class="bi bi-folder-fill" viewBox="0 0 16 16">-->
-        <!--                            <path d="M.54 3.87.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.826a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31zM2.19 4a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4H2.19zm4.69-1.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707z"/>-->
-        <!--                        </svg>-->
-        <!--                    </div>-->
-        <!--                </a>-->
-        <!--                <div class="card-body">-->
-        <!--                    <div class="d-flex align-items-center">-->
-        <!--                        <div class="row">-->
-        <!--                            <h5 class="card-title col-9">Folder</h5>-->
-        <!--                            <button class="btn float-end col-3 pt-0">-->
-        <!--                                <svg xmlns="http://www.w3.org/2000/svg" width="100%" fill="currentColor"-->
-        <!--                                     class="bi bi-pencil-square" viewBox="0 0 16 16">-->
-        <!--                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>-->
-        <!--                                    <path fill-rule="evenodd"-->
-        <!--                                          d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>-->
-        <!--                                </svg>-->
-        <!--                            </button>-->
-        <!--                        </div>-->
-        <!--                    </div>-->
-        <!--                    <div class="input-group">-->
-        <!--                        <form>-->
-        <!--                            <div class="row">-->
-        <!--                                <label>-->
-        <!--                                    <input class="col-9 py-0" type="text" value="Folder">-->
-        <!--                                </label>-->
-        <!--                                <button type="submit" class="btn col-7 my-1">-->
-        <!--                                    <svg xmlns="http://www.w3.org/2000/svg" width="30%" fill="currentColor"-->
-        <!--                                         class="bi bi-check-square" viewBox="0 0 16 16">-->
-        <!--                                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>-->
-        <!--                                        <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.235.235 0 0 1 .02-.022z"/>-->
-        <!--                                    </svg>-->
-        <!--                                    Submit-->
-        <!--                                </button>-->
-        <!--                            </div>-->
-        <!--                        </form>-->
-        <!--                    </div>-->
-        <!--                    <a href="#" class="btn btn-success my-3 w-100">Download Folder</a>-->
-        <!--                    <a href="#" class="btn btn-danger w-100">Delete Folder</a>-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--        </div>-->
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="row">
+                  <h5 class="file-name card-title col-9">File</h5>
+                  <button class="btn float-end col-3 pt-0">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="100%"
+                      fill="currentColor"
+                      class="bi bi-pencil-square"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="input-group" id="change-name-form">
+                <form th:action="@{/files/changeName}">
+                  <div class="row">
+                    <label>
+                      <input
+                        name="newFileName"
+                        class="col-9 py-0"
+                        type="text"
+                        th:value="${fileName}"
+                      />
+                      <input
+                        name="oldFileName"
+                        th:value="${fileName}"
+                        style="display: none"
+                      />
+                    </label>
+                    <button type="submit" class="btn col-7 my-1">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="30%"
+                        fill="currentColor"
+                        class="bi bi-check-square"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"
+                        />
+                        <path
+                          d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.235.235 0 0 1 .02-.022z"
+                        />
+                      </svg>
+                      Submit
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <a href="#" class="btn btn-success my-3 w-100">Download File</a>
+              <button class="btn btn-danger w-100 delete-btn">
+                Delete File
+              </button>
+            </div>
+          </div>
+        </div>
+      </template>
+      <!--        </div>-->
+
+      <!--        &lt;!&ndash; Folder Card &ndash;&gt;-->
+      <!--        <div class="col-sm-2 mb-4">-->
+      <!--            <div class="card">-->
+      <!--                <a class="text-black" href="#">-->
+      <!--                    <div class="d-flex justify-content-center align-items-center my-3">-->
+      <!--                        <svg xmlns="http://www.w3.org/2000/svg" width="30%" fill="currentColor"-->
+      <!--                             class="bi bi-folder-fill" viewBox="0 0 16 16">-->
+      <!--                            <path d="M.54 3.87.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.826a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31zM2.19 4a1 1 0 0 0-.996 1.09l.637 7a1 1 0 0 0 .995.91h10.348a1 1 0 0 0 .995-.91l.637-7A1 1 0 0 0 13.81 4H2.19zm4.69-1.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707z"/>-->
+      <!--                        </svg>-->
+      <!--                    </div>-->
+      <!--                </a>-->
+      <!--                <div class="card-body">-->
+      <!--                    <div class="d-flex align-items-center">-->
+      <!--                        <div class="row">-->
+      <!--                            <h5 class="card-title col-9">Folder</h5>-->
+      <!--                            <button class="btn float-end col-3 pt-0">-->
+      <!--                                <svg xmlns="http://www.w3.org/2000/svg" width="100%" fill="currentColor"-->
+      <!--                                     class="bi bi-pencil-square" viewBox="0 0 16 16">-->
+      <!--                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>-->
+      <!--                                    <path fill-rule="evenodd"-->
+
+      <!--                                          d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>-->
+      <!--                                </svg>-->
+      <!--                            </button>-->
+      <!--                        </div>-->
+      <!--                    </div>-->
+      <!--                    <div class="input-group">-->
+      <!--                        <form>-->
+      <!--                            <div class="row">-->
+      <!--                                <label>-->
+      <!--                                    <input class="col-9 py-0" type="text" value="Folder">-->
+      <!--                                </label>-->
+      <!--                                <button type="submit" class="btn col-7 my-1">-->
+      <!--                                    <svg xmlns="http://www.w3.org/2000/svg" width="30%" fill="currentColor"-->
+      <!--                                         class="bi bi-check-square" viewBox="0 0 16 16">-->
+      <!--                                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>-->
+      <!--                                        <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.235.235 0 0 1 .02-.022z"/>-->
+      <!--                                    </svg>-->
+      <!--                                    Submit-->
+      <!--                                </button>-->
+      <!--                            </div>-->
+      <!--                        </form>-->
+      <!--                    </div>-->
+      <!--                    <a href="#" class="btn btn-success my-3 w-100">Download Folder</a>-->
+      <!--                    <a href="#" class="btn btn-danger w-100">Delete Folder</a>-->
+      <!--                </div>-->
+      <!--            </div>-->
+      <!--        </div>-->
     </div>
-</div>
-<script src="js/bootstrap.bundle.js"></script>
-</body>
+    <!-- <script src="js/bootstrap.bundle.js"></script> -->
+  </body>
 </html>

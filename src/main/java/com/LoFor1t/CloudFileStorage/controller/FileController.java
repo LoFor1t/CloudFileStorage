@@ -3,22 +3,31 @@ package com.LoFor1t.CloudFileStorage.controller;
 import com.LoFor1t.CloudFileStorage.service.StorageService;
 import com.LoFor1t.CloudFileStorage.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.nio.file.FileAlreadyExistsException;
+import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
-@RequestMapping("/files")
+@RequestMapping("/api/files")
 public class FileController {
     private final StorageService storageService;
     private final UserServiceImpl userService;
+
+    @GetMapping
+    public ResponseEntity<List<String>> getUserFileNames() {
+        Long userId = userService.getUserIdBySecurityContext();
+
+//        Long userId = 102L;
+
+        return new ResponseEntity<>(storageService.listNamesOfUserFiles(userId), HttpStatus.OK);
+    }
+
 
     @PostMapping("/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
@@ -34,16 +43,16 @@ public class FileController {
 
         redirectAttributes.addFlashAttribute("fileUploadError", fileUploadError);
 
-        return "redirect:/storage";
+        return file.getName();
     }
 
     @GetMapping("/delete")
-    public String deleteFile(@RequestParam("fileName") String fileName) {
+    public ResponseEntity deleteFile(@RequestParam("fileName") String fileName) {
         Long userId = userService.getUserIdBySecurityContext();
 
         storageService.deleteObject(userId, fileName);
 
-        return "redirect:/storage";
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @GetMapping("/changeName")
